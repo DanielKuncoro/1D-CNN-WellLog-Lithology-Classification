@@ -7,6 +7,8 @@
 
 A 1D Convolutional Neural Network (1D-CNN) for automated lithology classification from well log data, evaluated using a **Leave-One-Well-Out (LOWO)** cross-validation scheme. This project was developed as part of an undergraduate thesis focusing on coal seam identification in subsurface formations.
 
+> **Note:** Well log data used in this study is confidential and not included in this repository. Only the model script and selected output figures are provided.
+
 ---
 
 ## Overview
@@ -54,16 +56,17 @@ Dense(4, Softmax)
 ```
 
 ### Training Strategy
-| Component         | Setting                                      |
-|-------------------|----------------------------------------------|
-| Optimizer         | Adam (lr = 1e-3)                             |
-| Loss Function     | Focal Loss (γ = 2.0)                         |
-| Class Weighting   | Balanced, capped at 6.0                      |
-| Validation Split  | 10% stratified                               |
-| Early Stopping    | Patience = 7 (monitor: val_loss)             |
-| LR Scheduler      | ReduceLROnPlateau (factor=0.5, patience=4)   |
-| Batch Size        | 64                                           |
-| Max Epochs        | 100                                          |
+
+| Component       | Setting                                    |
+|-----------------|--------------------------------------------|
+| Optimizer       | Adam (lr = 1e-3)                           |
+| Loss Function   | Focal Loss (γ = 2.0)                       |
+| Class Weighting | Balanced, capped at 6.0                    |
+| Validation      | 10% stratified split                       |
+| Early Stopping  | Patience = 7 (monitor: val_loss)           |
+| LR Scheduler    | ReduceLROnPlateau (factor=0.5, patience=4) |
+| Batch Size      | 64                                         |
+| Max Epochs      | 100                                        |
 
 Focal Loss was chosen over standard cross-entropy to handle class imbalance, particularly for the minority class (Coaly Shale). Class weights are additionally applied with a cap to prevent extreme over-weighting.
 
@@ -74,29 +77,25 @@ Focal Loss was chosen over standard cross-entropy to handle class imbalance, par
 ```
 1D-CNN-WellLog-Lithology-Classification/
 │
-├── lowo_cnn_lithology.py       # Main training and evaluation script
-│
-├── data/
-│   ├── Well_A.csv
-│   ├── Well_B.csv
-│   └── ...                     # 9 wells total (CSV format)
-│
-├── outputs/
-│   ├── cm_Well_A.png           # Confusion matrix per well
-│   ├── history_Well_A.png      # Training history per well
-│   ├── pred_Well_A.csv         # Prediction output per well
-│   ├── lowo_summary.csv        # Accuracy summary across all folds
-│   └── lowo_accuracy_summary.png
-│
+├── lowo_cnn_lithology.py        # Main training and evaluation script
 ├── requirements.txt
-└── README.md
+├── .gitignore
+├── README.md
+│
+└── outputs/
+    ├── lowo_summary.csv             # LOWO accuracy summary (all folds)
+    ├── lowo_accuracy_summary.png    # Bar chart of per-well accuracy
+    ├── cm_<WellName>.png            # Confusion matrix (selected wells)
+    └── history_<WellName>.png       # Training history (selected wells)
 ```
+
+> The `data/` folder is excluded from this repository. See **Data Format** below if you wish to run this script on your own well log data.
 
 ---
 
-## Input Data Format
+## Data Format
 
-Each well must be provided as a `.csv` file with at least the following columns:
+To run this script on your own data, prepare one CSV file per well with at least the following columns:
 
 | Column    | Description              |
 |-----------|--------------------------|
@@ -105,25 +104,35 @@ Each well must be provided as a `.csv` file with at least the following columns:
 | `DENSITY` | Bulk density (g/cc)      |
 | `LITHO`   | Lithology label (0–3)    |
 
-Rows with missing values in any of these columns are automatically dropped.
+Place all CSV files in a single folder and update `DATA_DIR` in the script accordingly. Rows with missing values in any of these columns are automatically dropped.
 
 ---
 
 ## Results
 
-The model was evaluated across **9 wells** using Leave-One-Well-Out (LOWO) cross-validation. Each fold trains on 8 wells and tests on the remaining 1 blind well.
+The model was evaluated across **9 wells** using Leave-One-Well-Out (LOWO) cross-validation.
 
 ### LOWO Accuracy per Blind Well
 
 | Well     | Accuracy |
 |----------|----------|
-| Well_1   | —        |
-| Well_2   | —        |
-| ...      | ...      |
+| Well-A   | —        |
+| Well-B   | —        |
+| Well-C   | —        |
+| Well-D   | —        |
+| Well-E   | —        |
+| Well-F   | —        |
+| Well-G   | —        |
+| Well-H   | —        |
+| Well-I   | —        |
 | **Mean** | **—**    |
 | **Std**  | **—**    |
 
-> *Replace the table above with your actual results from `outputs/lowo_summary.csv`.*
+> *Fill in this table with values from `outputs/lowo_summary.csv`.*
+
+### LOWO Accuracy Summary
+
+> *Insert `outputs/lowo_accuracy_summary.png` here.*
 
 ### Example: Confusion Matrix
 
@@ -137,48 +146,37 @@ The model was evaluated across **9 wells** using Leave-One-Well-Out (LOWO) cross
 
 ## Getting Started
 
-### Requirements
-
-```
-tensorflow>=2.10
-scikit-learn
-numpy
-pandas
-matplotlib
-seaborn
-```
-
-Install dependencies:
+### Installation
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### Running the Script
+### Running
 
-1. Place all well CSV files in your `DATA_DIR` folder.
-2. Update `DATA_DIR` and `OUTPUT_DIR` paths in `lowo_cnn_lithology.py`.
-3. Run:
+1. Prepare your well CSV files (see **Data Format** above).
+2. Update `DATA_DIR` and `OUTPUT_DIR` in `lowo_cnn_lithology.py`.
+3. Run the script:
 
 ```bash
 python lowo_cnn_lithology.py
 ```
 
-Output files (confusion matrices, training curves, prediction CSVs, and summary) will be saved to `OUTPUT_DIR`.
+Results will be saved to `OUTPUT_DIR`.
 
 ---
 
 ## Configuration
 
-Key parameters can be adjusted at the top of `lowo_cnn_lithology.py`:
+Key parameters at the top of `lowo_cnn_lithology.py`:
 
 ```python
-WINDOW_SIZE      = 101     # Sliding window length (depth samples)
+WINDOW_SIZE      = 101              # Sliding window length (depth samples)
 FEATURES         = ["GR", "DENSITY"]
 N_CLASSES        = 4
 EPOCHS           = 100
 BATCH_SIZE       = 64
-MAX_CLASS_WEIGHT = 6.0     # Cap on class weight to prevent extreme imbalance
+MAX_CLASS_WEIGHT = 6.0              # Cap on class weight
 ```
 
 ---
@@ -188,7 +186,7 @@ MAX_CLASS_WEIGHT = 6.0     # Cap on class weight to prevent extreme imbalance
 If you use this code in your research or academic work, please cite:
 
 ```
-Pangestu, D. P. (2025). 1D-CNN Well Log Lithology Classification using
+Kuncoro, D. (2025). 1D-CNN Well Log Lithology Classification using
 Leave-One-Well-Out Cross-Validation. Undergraduate Thesis.
 ```
 
