@@ -7,7 +7,7 @@
 
 A 1D Convolutional Neural Network (1D-CNN) for automated lithology classification from well log data, evaluated using a **Leave-One-Well-Out (LOWO)** cross-validation scheme. This project was developed as part of an undergraduate thesis focusing on coal seam identification in subsurface formations.
 
-> **Note:** Well log data used in this study is confidential and not included in this repository. Only the model script and selected output figures are provided.
+> **Note:** Well log data used in this study is confidential and not included in this repository.
 
 ---
 
@@ -77,19 +77,11 @@ Focal Loss was chosen over standard cross-entropy to handle class imbalance, par
 ```
 1D-CNN-WellLog-Lithology-Classification/
 │
-├── lowo_cnn_lithology.py        # Main training and evaluation script
+├── lowo_cnn_lithology.py   # Main training and evaluation script
 ├── requirements.txt
 ├── .gitignore
-├── README.md
-│
-└── outputs/
-    ├── lowo_summary.csv             # LOWO accuracy summary (all folds)
-    ├── lowo_accuracy_summary.png    # Bar chart of per-well accuracy
-    ├── cm_<WellName>.png            # Confusion matrix (selected wells)
-    └── history_<WellName>.png       # Training history (selected wells)
+└── README.md
 ```
-
-> The `data/` folder is excluded from this repository. See **Data Format** below if you wish to run this script on your own well log data.
 
 ---
 
@@ -97,12 +89,12 @@ Focal Loss was chosen over standard cross-entropy to handle class imbalance, par
 
 To run this script on your own data, prepare one CSV file per well with at least the following columns:
 
-| Column    | Description              |
-|-----------|--------------------------|
-| `DEPTH`   | Measured depth (m)       |
-| `GR`      | Gamma Ray (API)          |
-| `DENSITY` | Bulk density (g/cc)      |
-| `LITHO`   | Lithology label (0–3)    |
+| Column    | Description           |
+|-----------|-----------------------|
+| `DEPTH`   | Measured depth (m)    |
+| `GR`      | Gamma Ray (API)       |
+| `DENSITY` | Bulk density (g/cc)   |
+| `LITHO`   | Lithology label (0–3) |
 
 Place all CSV files in a single folder and update `DATA_DIR` in the script accordingly. Rows with missing values in any of these columns are automatically dropped.
 
@@ -128,19 +120,7 @@ The model was evaluated across **9 wells** using Leave-One-Well-Out (LOWO) cross
 | **Mean** | **—**    |
 | **Std**  | **—**    |
 
-> *Fill in this table with values from `outputs/lowo_summary.csv`.*
-
-### LOWO Accuracy Summary
-
-> *Insert `outputs/lowo_accuracy_summary.png` here.*
-
-### Example: Confusion Matrix
-
-> *Insert `outputs/cm_<WellName>.png` here.*
-
-### Example: Training History
-
-> *Insert `outputs/history_<WellName>.png` here.*
+> *Fill in this table with your actual results.*
 
 ---
 
@@ -162,8 +142,6 @@ pip install -r requirements.txt
 python lowo_cnn_lithology.py
 ```
 
-Results will be saved to `OUTPUT_DIR`.
-
 ---
 
 ## Configuration
@@ -171,12 +149,12 @@ Results will be saved to `OUTPUT_DIR`.
 Key parameters at the top of `lowo_cnn_lithology.py`:
 
 ```python
-WINDOW_SIZE      = 101              # Sliding window length (depth samples)
+WINDOW_SIZE      = 101               # Sliding window length (depth samples)
 FEATURES         = ["GR", "DENSITY"]
 N_CLASSES        = 4
 EPOCHS           = 100
 BATCH_SIZE       = 64
-MAX_CLASS_WEIGHT = 6.0              # Cap on class weight
+MAX_CLASS_WEIGHT = 6.0               # Cap on class weight
 ```
 
 ---
@@ -186,7 +164,7 @@ MAX_CLASS_WEIGHT = 6.0              # Cap on class weight
 If you use this code in your research or academic work, please cite:
 
 ```
-Kuncoro, D. (2025). 1D-CNN Well Log Lithology Classification using
+Pangestu, D. K. (2025). 1D-CNN Well Log Lithology Classification using
 Leave-One-Well-Out Cross-Validation. Undergraduate Thesis.
 ```
 
