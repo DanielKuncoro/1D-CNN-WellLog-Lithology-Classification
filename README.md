@@ -100,29 +100,6 @@ Place all CSV files in a single folder and update `DATA_DIR` in the script accor
 
 ---
 
-## Results
-
-The model was evaluated across **9 wells** using Leave-One-Well-Out (LOWO) cross-validation.
-
-### LOWO Accuracy per Blind Well
-
-| Well     | Accuracy |
-|----------|----------|
-| Well-A   | —        |
-| Well-B   | —        |
-| Well-C   | —        |
-| Well-D   | —        |
-| Well-E   | —        |
-| Well-F   | —        |
-| Well-G   | —        |
-| Well-H   | —        |
-| Well-I   | —        |
-| **Mean** | **—**    |
-| **Std**  | **—**    |
-
-> *Fill in this table with your actual results.*
-
----
 
 ## Getting Started
 
