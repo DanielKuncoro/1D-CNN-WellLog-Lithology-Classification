@@ -141,7 +141,7 @@ MAX_CLASS_WEIGHT = 6.0               # Cap on class weight
 If you use this code in your research or academic work, please cite:
 
 ```
-Pangestu, D. K. (2025). 1D-CNN Well Log Lithology Classification using
+Pangestu, D. K. (2026). 1D-CNN Well Log Lithology Classification using
 Leave-One-Well-Out Cross-Validation. Undergraduate Thesis.
 ```
 
